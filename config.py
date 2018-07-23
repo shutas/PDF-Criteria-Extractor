@@ -2,5 +2,5 @@
 
 import os
 
-INPUT_DIR = os.path.join(".", "input")
-OUTPUT_DIR = os.path.join(".", "output")
+INPUT1_DIR = os.path.join(".", "input1")
+OUTPUT1_DIR = os.path.join(".", "output1")

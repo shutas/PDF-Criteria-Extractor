@@ -12,16 +12,16 @@ def set_environment():
     """Clean up output directory."""
 
     # Delete all files in current output directory
-    file_list = [file for file in os.listdir(OUTPUT_DIR) if file.endswith(".txt")]
+    file_list = [file for file in os.listdir(OUTPUT1_DIR) if file.endswith(".txt")]
     for file in file_list:
-        os.remove(os.path.join(OUTPUT_DIR, file))
+        os.remove(os.path.join(OUTPUT1_DIR, file))
 
 
 def convert_pdf_to_txt():
     """Convert all pdf files in input directory to txt files."""
 
     # Get all files in input directory
-    file_list = [file for file in os.listdir(INPUT_DIR) if file.endswith(".pdf")]
+    file_list = [file for file in os.listdir(INPUT1_DIR) if file.endswith(".pdf")]
     #print(len(file_list))
     
     for file in file_list:
@@ -29,7 +29,7 @@ def convert_pdf_to_txt():
         #print(pdf_base_filename)
 
         # Open and read the pdf file in binary mode
-        fp = open(os.path.join(INPUT_DIR, file), "rb")
+        fp = open(os.path.join(INPUT1_DIR, file), "rb")
 
         # Create parser object to parse the pdf content
         parser = PDFParser(fp)
@@ -74,16 +74,16 @@ def convert_pdf_to_txt():
 
         # print (extracted_text.encode("utf-8"))
         new_text_filename = "raw_" + pdf_base_filename + ".txt" 
-        with open(os.path.join(OUTPUT_DIR, new_text_filename), "wb+") as my_log:
+        with open(os.path.join(OUTPUT1_DIR, new_text_filename), "wb+") as my_log:
             my_log.write(extracted_text.encode("utf-8"))
 
 def sanitize_output():
     """Sanitize output file by filtering unwanted lines."""
 
-    file_list = [file for file in os.listdir(OUTPUT_DIR) if file.endswith(".txt")]
+    file_list = [file for file in os.listdir(OUTPUT1_DIR) if file.endswith(".txt")]
     for file in file_list:
-        with open(os.path.join(OUTPUT_DIR, file), "rb") as input_file:
-            with open(os.path.join(OUTPUT_DIR, file[4:]), "wb+") as output_file: 
+        with open(os.path.join(OUTPUT1_DIR, file), "rb") as input_file:
+            with open(os.path.join(OUTPUT1_DIR, file[4:]), "wb+") as output_file: 
                 for line in input_file:
                     line = line.decode("utf-8")
                     if len(line) > 2:
@@ -91,14 +91,14 @@ def sanitize_output():
                             int(line.replace(",", ""))
                         except:
                             if "△" not in line:
-                                line = line.replace("　", "")
+                                line = line.replace("　", "").strip() + "\n"
                                 output_file.write(line.encode("utf-8"))
                         #int(line.decode("utf-8").replace(",", ""))
 
-    raw_file_list = [file for file in os.listdir(OUTPUT_DIR) if file.startswith("raw_") and file.endswith(".txt")]
+    raw_file_list = [file for file in os.listdir(OUTPUT1_DIR) if file.startswith("raw_") and file.endswith(".txt")]
     for file in raw_file_list:
         print(file)
-        os.remove(os.path.join(OUTPUT_DIR, file))
+        os.remove(os.path.join(OUTPUT1_DIR, file))
 
 
 def main():
