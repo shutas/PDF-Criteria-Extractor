@@ -73,12 +73,32 @@ def convert_pdf_to_txt():
         fp.close()
 
         # print (extracted_text.encode("utf-8"))
-        new_text_filename = pdf_base_filename + ".txt" 
+        new_text_filename = "raw_" + pdf_base_filename + ".txt" 
         with open(os.path.join(OUTPUT_DIR, new_text_filename), "wb+") as my_log:
             my_log.write(extracted_text.encode("utf-8"))
 
 def sanitize_output():
-    pass
+    """Sanitize output file by filtering unwanted lines."""
+
+    file_list = [file for file in os.listdir(OUTPUT_DIR) if file.endswith(".txt")]
+    for file in file_list:
+        with open(os.path.join(OUTPUT_DIR, file), "rb") as input_file:
+            with open(os.path.join(OUTPUT_DIR, file[4:]), "wb+") as output_file: 
+                for line in input_file:
+                    line = line.decode("utf-8")
+                    if len(line) > 2:
+                        try:
+                            int(line.replace(",", ""))
+                        except:
+                            if "△" not in line:
+                                line = line.replace("　", "")
+                                output_file.write(line.encode("utf-8"))
+                        #int(line.decode("utf-8").replace(",", ""))
+
+    raw_file_list = [file for file in os.listdir(OUTPUT_DIR) if file.startswith("raw_") and file.endswith(".txt")]
+    for file in raw_file_list:
+        print(file)
+        os.remove(os.path.join(OUTPUT_DIR, file))
 
 
 def main():
